@@ -7,10 +7,7 @@ package com.amigos.spring.blog.models;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.Date;
 
 @Entity
@@ -32,6 +29,7 @@ public class CustomerUser {
     @Column(name = "email", nullable = false, unique = true)
     @Email(message = "Email must be a valid email")
     @NotBlank(message = "Email is required.")
+    @NotNull(message = "Email can't be null")
     private String email;
 
     @Size(min = 3, max = 50, message = "Password should be between 3 & 50 characters")
@@ -41,6 +39,7 @@ public class CustomerUser {
 
     @Size(min = 10, max = 300,message = "Introduction must be at least 10 & maximum 300 characters long")
     @Column(name = "intro", nullable = false)
+    @NotNull @NotEmpty
     private String intro;
 
     @Column(name = "created_date")

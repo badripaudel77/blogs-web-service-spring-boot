@@ -7,8 +7,14 @@ package com.amigos.spring.blog.exceptions;
 import com.amigos.spring.blog.utils.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 /*
  - @RestControllerAdvice will be responsible for global exception handling for the app
@@ -39,5 +45,21 @@ public class GlobalExceptionHandler {
         ExceptionResponse exceptionResponse = new ExceptionResponse(exceptionMessage, exception.getErrorCode());
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /*
+     - Handles all data validation fail message like password, name based on annotation applied using hiberate validator
+     - By default spring gives MethodArgumentNotValidException if fields are not valid.
+    */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> beanValidationException(MethodArgumentNotValidException exception) {
+        Map<String, String> validationErrors = new HashMap<>();
+        exception.getBindingResult().getAllErrors().forEach((objectError -> {
+            String fieldName = ((FieldError)objectError).getField();
+            String message = objectError.getDefaultMessage();
+            validationErrors.put(fieldName, message);
+        }));
+
+        return new ResponseEntity<>(validationErrors, HttpStatus.BAD_REQUEST);
     }
 }
