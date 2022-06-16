@@ -4,6 +4,7 @@ import com.amigos.spring.blog.dtos.BlogDTO;
 import com.amigos.spring.blog.models.Blog;
 import com.amigos.spring.blog.models.BlogCategory;
 import com.amigos.spring.blog.models.CustomerUser;
+import com.amigos.spring.blog.utils.BlogsData;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface BlogService {
 
     BlogDTO getBlogById(Long blogId);
 
-    List<BlogDTO> getAllBlogs(); // maybe useful for admin users
+    BlogsData getAllBlogs(Integer page, Integer size, String sortField, String sortDirection); // maybe useful for admin users
 
     BlogDTO createBlog(Blog blog, Long customerUserId, Long blogCategoryId);
 

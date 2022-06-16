@@ -1,6 +1,7 @@
 package com.amigos.spring.blog.services.implementation;
 
 import com.amigos.spring.blog.dtos.BlogDTO;
+import com.amigos.spring.blog.utils.BlogsData;
 import com.amigos.spring.blog.exceptions.ResourceNotFoundException;
 import com.amigos.spring.blog.exceptions.UnauthorizedException;
 import com.amigos.spring.blog.models.Blog;
@@ -12,6 +13,10 @@ import com.amigos.spring.blog.repositories.CustomerUserRepository;
 import com.amigos.spring.blog.services.interfaces.BlogService;
 import com.amigos.spring.blog.utils.BlogDTOHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -77,16 +82,31 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public List<BlogDTO> getAllBlogs() {
-        List<Blog> blogList = blogRepository.findAll();
-        if(blogList.size() == 0)
+    public BlogsData getAllBlogs(Integer page, Integer size, String sortField, String sortDirection) {
+        //https://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-part-seven-pagination/
+        if(size<=0) size = 5;
+        if(page<0) page= 0;
+        Pageable pageable = PageRequest.of(page,size, Sort.Direction.valueOf(sortDirection), sortField);
+
+        Page<Blog> pageableBlogs = blogRepository.findAll(pageable);
+        List<Blog> blogList = pageableBlogs.getContent();
+
+        if(blogList.size() == 0) {
             throw new ResourceNotFoundException("No Blogs found in the server.", 404);
+        }
+        BlogsData blogsData = new BlogsData();
         List<BlogDTO> blogDTOList = new ArrayList<>();
         blogList.forEach((blog) -> {
             BlogDTO blogDTO = BlogDTOHelper.buildDTOFromBlog(blog);
             blogDTOList.add(blogDTO);
         });
-        return blogDTOList;
+
+        blogsData.setBlogs(blogDTOList);
+        blogsData.setLastPage(pageableBlogs.isLast());
+        blogsData.setTotalPages(pageableBlogs.getTotalPages());
+        blogsData.setTotalElements(pageableBlogs.getTotalElements());
+        blogsData.setCurrentPage(pageableBlogs.getNumber());
+        return blogsData;
     }
 
     @Override

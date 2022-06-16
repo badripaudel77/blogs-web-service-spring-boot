@@ -3,7 +3,9 @@ package com.amigos.spring.blog.apis;
 import com.amigos.spring.blog.dtos.BlogDTO;
 import com.amigos.spring.blog.models.Blog;
 import com.amigos.spring.blog.services.interfaces.BlogService;
+import com.amigos.spring.blog.utils.BlogsData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +21,14 @@ public class BlogResource {
     @Autowired
     private BlogService blogService;
 
-    @GetMapping("/")
-    public List<BlogDTO> getAllBlogs() {
-        return blogService.getAllBlogs();
+    //https://www.baeldung.com/spring-request-param
+    @GetMapping("")
+    public BlogsData getAllBlogs(@RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
+                                 @RequestParam(name = "size", defaultValue = "5", required = false) Integer size,
+                                 @RequestParam(name= "sort", defaultValue = "createdDate") String sortField,
+                                 @RequestParam(name= "direction", defaultValue = "DESC") String sortDirection
+                                     ) {
+        return blogService.getAllBlogs(page, size, sortField, sortDirection);
     }
 
     @GetMapping("/{blogId}")
