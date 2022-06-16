@@ -62,4 +62,15 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(validationErrors, HttpStatus.BAD_REQUEST);
     }
+
+    /*
+     - Handles all UnauthorizedException
+     - If user is not allowed to do that operation.
+    */
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ExceptionResponse> unauthorizedException(UnauthorizedException exception) {
+        String exceptionMessage = exception.getMessage();
+        ExceptionResponse exceptionResponse = new ExceptionResponse(exceptionMessage, exception.getErrorCode());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
 }

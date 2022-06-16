@@ -8,7 +8,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "customer_users")
@@ -47,5 +49,9 @@ public class CustomerUser {
 
     @Column(name = "deleted_date")
     private Date deletedDate = null ;
+
+    // One User can have many posts
+    @OneToMany(mappedBy = "customerUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Blog> blogList = new ArrayList<>();
 
 }

@@ -35,3 +35,6 @@ build/
 ### VS Code ###
 .vscode/
 
+# ingore .log files
+amigos_logs.*
+

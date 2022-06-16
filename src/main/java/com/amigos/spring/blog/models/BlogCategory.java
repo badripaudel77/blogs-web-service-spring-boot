@@ -10,7 +10,9 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "blog_categories")
@@ -35,4 +37,8 @@ public class BlogCategory {
 
     @Column(name = "category_created_data")
     private Date createdDate = new Date();
+
+    // One BlogCategory can belong to many posts
+    @OneToMany(mappedBy = "blogCategory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Blog> blogList = new ArrayList<>();
 }
