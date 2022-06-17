@@ -2,8 +2,6 @@ package com.amigos.spring.blog.services.interfaces;
 
 import com.amigos.spring.blog.dtos.BlogDTO;
 import com.amigos.spring.blog.models.Blog;
-import com.amigos.spring.blog.models.BlogCategory;
-import com.amigos.spring.blog.models.CustomerUser;
 import com.amigos.spring.blog.utils.BlogsData;
 
 import java.util.List;
@@ -24,6 +22,6 @@ public interface BlogService {
 
     Boolean deleteBlog(Long blogId, Long customerUserId);
 
-    List<BlogDTO> searchBlogs(String searchTerm);
+    List<BlogDTO> searchBlogsBySearchTerm(String searchTerm);
 
 }

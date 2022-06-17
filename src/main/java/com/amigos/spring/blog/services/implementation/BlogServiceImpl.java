@@ -12,6 +12,8 @@ import com.amigos.spring.blog.repositories.BlogRepository;
 import com.amigos.spring.blog.repositories.CustomerUserRepository;
 import com.amigos.spring.blog.services.interfaces.BlogService;
 import com.amigos.spring.blog.utils.BlogDTOHelper;
+import com.amigos.spring.blog.utils.MyLogger;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +28,7 @@ import java.util.Optional;
 @Service
 public class BlogServiceImpl implements BlogService {
 
+    Logger logger = MyLogger.getMyLogger();
     @Autowired
     private BlogRepository blogRepository;
 
@@ -167,7 +170,18 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public List<BlogDTO> searchBlogs(String searchTerm) {
-        return null;
+    public List<BlogDTO> searchBlogsBySearchTerm(String searchTerm) {
+        List<Blog> blogList = blogRepository.searchBlogsBySearchTerm("%" + searchTerm.toLowerCase() + "%");
+        if(blogList.size() == 0) {
+            logger.info("No results found for search term : " + searchTerm);
+            throw new ResourceNotFoundException("No Blogs found in the server.", 404);
+        }
+        List<BlogDTO> blogDTOList = new ArrayList<>();
+        blogList.forEach((blog) -> {
+            BlogDTO blogDTO = BlogDTOHelper.buildDTOFromBlog(blog);
+            blogDTOList.add(blogDTO);
+        });
+        logger.debug(blogDTOList.size() + "results found.");
+        return blogDTOList;
     }
 }

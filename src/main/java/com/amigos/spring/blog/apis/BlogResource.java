@@ -30,6 +30,11 @@ public class BlogResource {
                                      ) {
         return blogService.getAllBlogs(page, size, sortField, sortDirection);
     }
+    @GetMapping("/search")
+    public ResponseEntity<List<BlogDTO>> searchBlogs(@RequestParam(name = "searchTerm", defaultValue = "", required = false) String searchTerm) {
+        List<BlogDTO> blogDTOList = blogService.searchBlogsBySearchTerm("%" + searchTerm + "%");
+        return new ResponseEntity<>(blogDTOList, HttpStatus.OK);
+    }
 
     @GetMapping("/{blogId}")
     public ResponseEntity<BlogDTO> getBlogById(@PathVariable("blogId") Long blogId) {
