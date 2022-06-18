@@ -4,6 +4,7 @@ import com.amigos.spring.blog.dtos.BlogDTO;
 import com.amigos.spring.blog.models.Blog;
 import com.amigos.spring.blog.services.interfaces.BlogService;
 import com.amigos.spring.blog.utils.BlogsData;
+import com.amigos.spring.blog.utils.GlobalConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -23,10 +24,10 @@ public class BlogResource {
 
     //https://www.baeldung.com/spring-request-param
     @GetMapping("")
-    public BlogsData getAllBlogs(@RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
-                                 @RequestParam(name = "size", defaultValue = "5", required = false) Integer size,
-                                 @RequestParam(name= "sort", defaultValue = "createdDate") String sortField,
-                                 @RequestParam(name= "direction", defaultValue = "DESC") String sortDirection
+    public BlogsData getAllBlogs(@RequestParam(name = "page", defaultValue = GlobalConstants.DEFAULT_STARTING_PAGE, required = false) Integer page,
+                                 @RequestParam(name = "size", defaultValue = GlobalConstants.DEFAULT_PAGE_SIZE, required = false) Integer size,
+                                 @RequestParam(name= "sort", defaultValue = GlobalConstants.DEFAULT_SORTING_FIELD) String sortField,
+                                 @RequestParam(name= "direction", defaultValue = GlobalConstants.DEFAULT_SORTING_DIRECTION) String sortDirection
                                      ) {
         return blogService.getAllBlogs(page, size, sortField, sortDirection);
     }

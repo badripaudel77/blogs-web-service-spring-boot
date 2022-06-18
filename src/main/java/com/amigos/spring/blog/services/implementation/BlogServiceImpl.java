@@ -12,6 +12,7 @@ import com.amigos.spring.blog.repositories.BlogRepository;
 import com.amigos.spring.blog.repositories.CustomerUserRepository;
 import com.amigos.spring.blog.services.interfaces.BlogService;
 import com.amigos.spring.blog.utils.BlogDTOHelper;
+import com.amigos.spring.blog.utils.GlobalConstants;
 import com.amigos.spring.blog.utils.MyLogger;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,8 +88,8 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public BlogsData getAllBlogs(Integer page, Integer size, String sortField, String sortDirection) {
         //https://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-part-seven-pagination/
-        if(size<=0) size = 5;
-        if(page<0) page= 0;
+        if(size<=0) size = Integer.parseInt(GlobalConstants.DEFAULT_PAGE_SIZE);
+        if(page<0) page= Integer.parseInt(GlobalConstants.DEFAULT_STARTING_PAGE);
         Pageable pageable = PageRequest.of(page,size, Sort.Direction.valueOf(sortDirection), sortField);
 
         Page<Blog> pageableBlogs = blogRepository.findAll(pageable);

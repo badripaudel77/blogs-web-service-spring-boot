@@ -1,15 +1,12 @@
 package com.amigos.spring.blog.services.implementation;
 
 import com.amigos.spring.blog.dtos.BlogCategoryDTO;
-import com.amigos.spring.blog.dtos.CustomerUserDTO;
 import com.amigos.spring.blog.exceptions.ResourceAlreadyExistsException;
 import com.amigos.spring.blog.exceptions.ResourceNotFoundException;
 import com.amigos.spring.blog.models.BlogCategory;
-import com.amigos.spring.blog.models.CustomerUser;
 import com.amigos.spring.blog.repositories.BlogCategoryRepository;
 import com.amigos.spring.blog.services.interfaces.BlogCategoryService;
 import com.amigos.spring.blog.utils.BlogCategoryDTOHelper;
-import com.amigos.spring.blog.utils.CustomerUserDTOHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
