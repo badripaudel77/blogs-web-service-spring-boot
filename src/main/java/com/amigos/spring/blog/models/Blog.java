@@ -33,8 +33,6 @@ public class Blog {
     private String blogDescription;
 
     @Column(name = "blog_img_url")
-    @NotEmpty(message = "Image can't be empty")
-    @NotNull(message = "Image can't be empty")
     private String blogImageURL;
 
     @Column(name = "blog_created_date")

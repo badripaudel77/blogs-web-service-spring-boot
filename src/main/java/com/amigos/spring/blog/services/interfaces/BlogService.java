@@ -3,6 +3,7 @@ package com.amigos.spring.blog.services.interfaces;
 import com.amigos.spring.blog.dtos.BlogDTO;
 import com.amigos.spring.blog.models.Blog;
 import com.amigos.spring.blog.utils.BlogsData;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,4 +25,7 @@ public interface BlogService {
 
     List<BlogDTO> searchBlogsBySearchTerm(String searchTerm);
 
+    BlogDTO uploadFeaturedImageForBlog(Long blogId, MultipartFile file);
+
+    String getImageURLByImageName(String imageName);
 }

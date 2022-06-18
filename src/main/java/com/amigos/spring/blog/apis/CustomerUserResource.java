@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -38,7 +39,8 @@ public class CustomerUserResource {
     }
 
     @PutMapping("/update/{userId}")
-    public ResponseEntity<CustomerUserDTO> updateCustomerUser(@Valid @RequestBody CustomerUser customerUser, @PathVariable("userId") Long userId) {
+    public ResponseEntity<CustomerUserDTO> updateCustomerUser(@Valid @RequestBody CustomerUser customerUser,
+                                                              @PathVariable("userId") Long userId) {
         CustomerUserDTO customerUserDTO = customerUserService.updateCustomerUser(customerUser, userId);
         return new ResponseEntity<>(customerUserDTO, HttpStatus.OK);
     }
@@ -49,4 +51,16 @@ public class CustomerUserResource {
         return new ResponseEntity(Map.of("isUserDeleted", isUserDeleted), HttpStatus.OK);
     }
 
+    @PostMapping("/image/upload/{customerUserId}")
+    public ResponseEntity uploadFeaturedImage(@RequestParam("profileImage") MultipartFile file,
+                                              @PathVariable("customerUserId") Long customerUserId) {
+        CustomerUserDTO customerUserDTO = customerUserService.uploadProfileImageForCustomerUser(customerUserId, file);
+        return new ResponseEntity(customerUserDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/image/get/{imageName}")
+    public ResponseEntity retrieveImageURLByImageName(@PathVariable("imageName") String imageName)  {
+        String fileDownloadUri = customerUserService.getImageURLByImageName(imageName);
+        return ResponseEntity.ok(Map.of("blogFeaturedImageDownloadURL", fileDownloadUri));
+    }
 }

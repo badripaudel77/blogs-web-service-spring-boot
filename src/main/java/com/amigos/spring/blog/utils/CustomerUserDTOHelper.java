@@ -11,6 +11,7 @@ public class CustomerUserDTOHelper {
         customerUserDTO.setEmail(customerUser.getEmail());
         customerUserDTO.setIntro(customerUser.getIntro());
         customerUserDTO.setCreatedDate(customerUser.getCreatedDate());
+        customerUserDTO.setProfileImageURL(customerUser.getProfileImageURL());
         return customerUserDTO;
     }
 }

@@ -44,6 +44,9 @@ public class CustomerUser {
     @NotNull @NotEmpty
     private String intro;
 
+    @Column(name = "user_profile_image")
+    private String profileImageURL;
+
     @Column(name = "created_date")
     private Date createdDate = new Date();
 

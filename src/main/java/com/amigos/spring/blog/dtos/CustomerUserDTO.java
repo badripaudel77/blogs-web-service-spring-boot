@@ -20,4 +20,5 @@ public class CustomerUserDTO {
     private String intro;
     private Date createdDate;
     private Date deletedDate;
+    private String profileImageURL;
 }

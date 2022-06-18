@@ -6,10 +6,10 @@ import com.amigos.spring.blog.services.interfaces.BlogService;
 import com.amigos.spring.blog.utils.BlogsData;
 import com.amigos.spring.blog.utils.GlobalConstants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -44,7 +44,8 @@ public class BlogResource {
     }
 
     @DeleteMapping("/delete/{userId}/{blogId}")
-    public ResponseEntity<Map> deleteBlogById(@PathVariable("userId") Long userId, @PathVariable("blogId") Long blogId) {
+    public ResponseEntity<Map> deleteBlogById(@PathVariable("userId") Long userId,
+                                              @PathVariable("blogId") Long blogId) {
         Boolean isDeleted = blogService.deleteBlog(userId, blogId);
         return new ResponseEntity<>(Map.of("isBlogDeleted", isDeleted), HttpStatus.OK);
     }
@@ -61,14 +62,31 @@ public class BlogResource {
     }
 
     @PostMapping("/create/{userId}/{categoryId}")
-    public ResponseEntity<BlogDTO> createBlog(@Valid @RequestBody Blog blog, @PathVariable("userId") Long userId, @PathVariable("categoryId") Long categoryId) {
+    public ResponseEntity<BlogDTO> createBlog(@Valid @RequestBody Blog blog,
+                                              @PathVariable("userId") Long userId,
+                                              @PathVariable("categoryId") Long categoryId) {
         BlogDTO createdBlogDTO = blogService.createBlog(blog, userId, categoryId);
         return new ResponseEntity<>(createdBlogDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{userId}/{blogId}")
-    public ResponseEntity<BlogDTO> updateBlog(@Valid @RequestBody Blog blog, @PathVariable("userId") Long userId, @PathVariable("blogId") Long blogId) {
+    public ResponseEntity<BlogDTO> updateBlog(@Valid @RequestBody Blog blog,
+                                              @PathVariable("userId") Long userId,
+                                              @PathVariable("blogId") Long blogId) {
         BlogDTO blogDTO = blogService.updateBlog(blog, userId, blogId);
         return new ResponseEntity<>(blogDTO, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/image/upload/{blogId}")
+    public ResponseEntity uploadFeaturedImage(@RequestParam("featuredImage") MultipartFile file,
+                                              @PathVariable("blogId") Long blogId) {
+        BlogDTO blogDTO = blogService.uploadFeaturedImageForBlog(blogId, file);
+        return new ResponseEntity(blogDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/image/get/{imageName}")
+    public ResponseEntity retrieveImageURLByImageName(@PathVariable("imageName") String imageName)  {
+        String fileDownloadUri = blogService.getImageURLByImageName(imageName);
+        return ResponseEntity.ok(Map.of("blogFeaturedImageDownloadURL", fileDownloadUri));
     }
 }

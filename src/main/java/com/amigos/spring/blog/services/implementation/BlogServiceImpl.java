@@ -1,6 +1,7 @@
 package com.amigos.spring.blog.services.implementation;
 
 import com.amigos.spring.blog.dtos.BlogDTO;
+import com.amigos.spring.blog.exceptions.ResourceAlreadyExistsException;
 import com.amigos.spring.blog.utils.BlogsData;
 import com.amigos.spring.blog.exceptions.ResourceNotFoundException;
 import com.amigos.spring.blog.exceptions.UnauthorizedException;
@@ -16,12 +17,21 @@ import com.amigos.spring.blog.utils.GlobalConstants;
 import com.amigos.spring.blog.utils.MyLogger;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -124,6 +134,9 @@ public class BlogServiceImpl implements BlogService {
         if(!customerUser.isPresent()) {
             throw new ResourceNotFoundException("This customer user " + customerUserId + " doesn't exist.", 404);
         }
+        if(blog.getBlogImageURL() == null || blog.getBlogImageURL().length() <3) {
+            blog.setBlogImageURL(GlobalConstants.DEFAULT_FEATURED_IMAGE_URL);
+        }
         blog.setCustomerUser(customerUser.get());
         blog.setBlogCategory(blogCategory.get());
 
@@ -184,5 +197,40 @@ public class BlogServiceImpl implements BlogService {
         });
         logger.debug(blogDTOList.size() + "results found.");
         return blogDTOList;
+    }
+
+    @Override
+    public BlogDTO uploadFeaturedImageForBlog(Long blogId, MultipartFile file) {
+        String filename;
+        Optional<Blog> blog = blogRepository.findById(blogId);
+        if(!blog.isPresent()) {
+            throw new ResourceNotFoundException("No Blogs found in the server with ID " + blogId, 404);
+        }
+
+        try {
+            File destinationFile = new File(GlobalConstants.BLOG_FEATURED_IMAGE_UPLOAD_DIR);
+            filename = "app_blog_featured_image_" + blog.get().getId() + "_" +
+                    "_" + file.getSize() + "_" + file.getName() + "_" + file.getOriginalFilename() ;
+            Path path = Paths.get(destinationFile.getAbsolutePath() + File.separator + filename);
+            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+        }
+        catch (IOException exception) {
+            logger.info("Something went wrong while uploading featured image : " + exception.getMessage());
+            throw new ResourceAlreadyExistsException("Something went wrong while uploading featured image : " + exception.getMessage(), 500);
+        }
+        blog.get().setBlogImageURL(filename);
+        Blog savedBlog = blogRepository.save(blog.get());
+        logger.info("Image " + file.getOriginalFilename() + " uploaded successfully.");
+        return BlogDTOHelper.buildDTOFromBlog(savedBlog);
+    }
+
+    // REF : https://www.devglan.com/spring-boot/spring-boot-file-upload-download
+    @Override
+    public String getImageURLByImageName(String imageName) {
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("uploads/blog_featured_images/")
+                .path(imageName)
+                .toUriString();
+        return fileDownloadUri;
     }
 }

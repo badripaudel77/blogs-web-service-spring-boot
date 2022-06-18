@@ -7,15 +7,29 @@ import com.amigos.spring.blog.models.CustomerUser;
 import com.amigos.spring.blog.repositories.CustomerUserRepository;
 import com.amigos.spring.blog.services.interfaces.CustomerUserService;
 import com.amigos.spring.blog.utils.CustomerUserDTOHelper;
+import com.amigos.spring.blog.utils.GlobalConstants;
+import com.amigos.spring.blog.utils.MyLogger;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CustomerUserServiceImpl implements CustomerUserService {
+
+    Logger logger = MyLogger.getMyLogger();
 
     @Autowired
     private CustomerUserRepository customerUserRepository;
@@ -41,6 +55,9 @@ public class CustomerUserServiceImpl implements CustomerUserService {
         if(existingCustomerUser.isPresent())
             throw  new ResourceAlreadyExistsException("User with email "+ user.getEmail() + " already exists.", 500);
 
+        if(user.getProfileImageURL() == null || user.getProfileImageURL().length() <3) {
+            user.setProfileImageURL(GlobalConstants.DEFAULT_PROFILE_IMAGE_URL);
+        }
         CustomerUser customerUser = customerUserRepository.save(user);
         CustomerUserDTO customerUserDTO = CustomerUserDTOHelper.buildDTOFromCustomerUser(customerUser);
         return customerUserDTO;
@@ -71,5 +88,44 @@ public class CustomerUserServiceImpl implements CustomerUserService {
         CustomerUser customerUser = customerUserRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User with UserId "+ userId + " not found.", 404));
         customerUserRepository.delete(customerUser);
         return true;
+    }
+
+    /*
+     ** TODO : make much more reliable file name with no spaces and more, not to get unexpected error.
+     ** Also, check more types to be accepted, as it can now even accept pdf files.
+    */
+    @Override
+    public CustomerUserDTO uploadProfileImageForCustomerUser(Long customerUserId, MultipartFile file) {
+        String filename;
+        Optional<CustomerUser> customerUser = customerUserRepository.findById(customerUserId);
+        if(!customerUser.isPresent()) {
+            throw new ResourceNotFoundException("No User found in the server with ID " + customerUserId, 404);
+        }
+        try {
+            File destinationFile = new File(GlobalConstants.CUSTOMER_USER_PROFILE_IMAGE_UPLOAD_DIR);
+            filename = "app_customer_user_profile_image_" + customerUser.get().getId() + "_" +
+                    customerUser.get().getName().replace(" ","") +
+                    "_" + file.getSize() + file.getName() + "_" + file.getOriginalFilename();
+            Path path = Paths.get(destinationFile.getAbsolutePath() + File.separator + filename);
+            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+        }
+        catch (IOException exception) {
+            logger.info("Something went wrong while uploading profile image : " + exception.getMessage());
+            throw new ResourceAlreadyExistsException("Something went wrong while uploading profile image : " + exception.getMessage(), 500);
+        }
+        customerUser.get().setProfileImageURL(filename);
+        CustomerUser savedCustomerUser = customerUserRepository.save(customerUser.get());
+        logger.info("Image " + filename + " uploaded successfully.");
+        return CustomerUserDTOHelper.buildDTOFromCustomerUser(savedCustomerUser);
+    }
+
+    // REF : https://www.devglan.com/spring-boot/spring-boot-file-upload-download
+    @Override
+    public String getImageURLByImageName(String imageName) {
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("uploads/profile_images/")
+                .path(imageName)
+                .toUriString();
+        return fileDownloadUri;
     }
 }
