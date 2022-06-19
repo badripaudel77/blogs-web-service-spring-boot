@@ -9,7 +9,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "blogs")
@@ -49,5 +51,8 @@ public class Blog {
     // @JoinColumn(name = "blog_category_id")
     private BlogCategory blogCategory;
 
+    // blog has list of comments
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL)
+    List<Comment> comments = new ArrayList<>();
 
 }

@@ -1,5 +1,6 @@
 package com.amigos.spring.blog.dtos;
 
+import com.amigos.spring.blog.models.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,5 +21,6 @@ public class BlogDTO {
     private Date createdDate;
     private CustomerUserDTO customerUser;
     private BlogCategoryDTO blogCategory;
+    private List<CommentDTO> comments;
 }
 

@@ -1,9 +1,11 @@
 package com.amigos.spring.blog.utils;
 
-import com.amigos.spring.blog.dtos.BlogCategoryDTO;
 import com.amigos.spring.blog.dtos.BlogDTO;
+import com.amigos.spring.blog.dtos.CommentDTO;
 import com.amigos.spring.blog.models.Blog;
-import com.amigos.spring.blog.models.BlogCategory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlogDTOHelper {
 
@@ -16,6 +18,12 @@ public class BlogDTOHelper {
         blogDTO.setCreatedDate(blog.getCreatedDate());
         blogDTO.setCustomerUser(CustomerUserDTOHelper.buildDTOFromCustomerUser(blog.getCustomerUser()));
         blogDTO.setBlogCategory(BlogCategoryDTOHelper.buildDTOFromBlogCategory(blog.getBlogCategory()));
+        List<CommentDTO> commentDTOList = new ArrayList<>();
+        blog.getComments().forEach((comment) -> {
+            CommentDTO commentDTO = CommentDTOHelper.buildDTOFromComment(comment);
+            commentDTOList.add(commentDTO);
+        });
+        blogDTO.setComments(commentDTOList);
         return blogDTO;
     }
 }
