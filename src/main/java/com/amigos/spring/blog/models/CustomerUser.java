@@ -8,9 +8,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "customer_users")
@@ -34,7 +32,7 @@ public class CustomerUser {
     @NotNull(message = "Email can't be null")
     private String email;
 
-    @Size(min = 3, max = 50, message = "Password should be between 3 & 50 characters")
+    @Size(min = 3, max = 200, message = "Password should be between 3 & 50 characters")
     @NotEmpty(message = "Empty password not allowed.")
     @Column(name = "password", nullable = false)
     private String password;
@@ -56,5 +54,13 @@ public class CustomerUser {
     // One User can have many posts
     @OneToMany(mappedBy = "customerUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Blog> blogList = new ArrayList<>();
+
+    // id = primary key of respective table
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "customer_user_roles",
+            joinColumns = @JoinColumn(name = "customer_user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
 }

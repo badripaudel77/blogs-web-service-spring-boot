@@ -1,6 +1,9 @@
 # amigos-spring-blogs
 Blog application using Spring Boot &amp; Java 
 ---------------------------------------------
+
+# TODO: please add redis with spring redis .... for learning purposes and observe the time efficiency for retrieving data.
+
 # Dependencies :
 - Spring web
 - Spring boot dev tools
@@ -26,8 +29,17 @@ Blog application using Spring Boot &amp; Java
 # Database
 - users [will contain all users, individual users will have many blogs]
 - blogs [contains all the blog posts, blog will contain the user_id]
-- comments [one blog has many commnents, comment has blog_id & user_id, one user can make multiple comments?]
+- comments [one blog has many comments, comment has blog_id & user_id, one user can make multiple comments?]
 - roles  [role defined for each user, like ADMIN_ROLE, NORMAL_USER, and more if required.]
 - categories [list of categories, one post can have categories...]
-- ...
+
+# Spring security reference :
+- REF 1: https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/user-details.html
+- REF 2 : https://docs.spring.io/spring-security/reference/servlet/authorization/method-security.html
+- REF 3 : [Learn Code With Durgesh] https://www.youtube.com/watch?v=3m_mLFz-uQE&list=PL0zysOflRCen-GihOcm1hZfYAlwr63K_M&index=31
+
+# Spring boot image [file] uploading & serving  [image] download url
+ - REF1 : https://stackoverflow.com/questions/45651119/spring-boot-images-uploading-and-serving
+ - REF2 : https://stackoverflow.com/a/52151216/9898251
+ - REF : https://www.devglan.com/spring-boot/spring-boot-file-upload-download
 

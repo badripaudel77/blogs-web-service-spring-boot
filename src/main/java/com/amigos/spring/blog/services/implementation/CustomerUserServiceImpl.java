@@ -11,7 +11,6 @@ import com.amigos.spring.blog.utils.GlobalConstants;
 import com.amigos.spring.blog.utils.MyLogger;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;

@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+// TODO : implement redis cache later and optimize performance assuming we have large no of data.
 @Service
 public class BlogServiceImpl implements BlogService {
 
