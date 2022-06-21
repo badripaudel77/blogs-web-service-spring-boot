@@ -25,7 +25,7 @@ import java.util.Date;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-public class AuthenticationController {
+public class AuthenticationResource {
 
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
