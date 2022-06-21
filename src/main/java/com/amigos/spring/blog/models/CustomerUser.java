@@ -56,7 +56,8 @@ public class CustomerUser {
     private List<Blog> blogList = new ArrayList<>();
 
     // id = primary key of respective table
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    // TODO: it's inserting into role table also, no need to do that, as info will be on join table. can be optiomized.
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "customer_user_roles",
             joinColumns = @JoinColumn(name = "customer_user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")

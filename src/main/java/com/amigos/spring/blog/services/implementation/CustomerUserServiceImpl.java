@@ -4,6 +4,7 @@ import com.amigos.spring.blog.dtos.CustomerUserDTO;
 import com.amigos.spring.blog.exceptions.ResourceAlreadyExistsException;
 import com.amigos.spring.blog.exceptions.ResourceNotFoundException;
 import com.amigos.spring.blog.models.CustomerUser;
+import com.amigos.spring.blog.models.Role;
 import com.amigos.spring.blog.repositories.CustomerUserRepository;
 import com.amigos.spring.blog.services.interfaces.CustomerUserService;
 import com.amigos.spring.blog.utils.CustomerUserDTOHelper;
@@ -11,22 +12,25 @@ import com.amigos.spring.blog.utils.GlobalConstants;
 import com.amigos.spring.blog.utils.MyLogger;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.persistence.EntityManager;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CustomerUserServiceImpl implements CustomerUserService {
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     Logger logger = MyLogger.getMyLogger();
 
@@ -57,6 +61,12 @@ public class CustomerUserServiceImpl implements CustomerUserService {
         if(user.getProfileImageURL() == null || user.getProfileImageURL().length() <3) {
             user.setProfileImageURL(GlobalConstants.DEFAULT_PROFILE_IMAGE_URL);
         }
+        Set<Role> roles = new HashSet<>();
+        Role role = new Role();
+        role.setRoleName(GlobalConstants.DEFAULT_USER_ROLE_NAME);
+        roles.add(role);
+        user.setRoles(roles);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         CustomerUser customerUser = customerUserRepository.save(user);
         CustomerUserDTO customerUserDTO = CustomerUserDTOHelper.buildDTOFromCustomerUser(customerUser);
         return customerUserDTO;

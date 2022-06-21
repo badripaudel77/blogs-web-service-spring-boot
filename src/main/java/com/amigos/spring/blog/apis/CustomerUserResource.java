@@ -32,12 +32,6 @@ public class CustomerUserResource {
         return ResponseEntity.ok(customerUserDetails);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<CustomerUserDTO> registerCustomerUser(@Valid @RequestBody CustomerUser customerUser) {
-        CustomerUserDTO customerUserDTO = customerUserService.registerCustomerUser(customerUser);
-        return new ResponseEntity<>(customerUserDTO, HttpStatus.CREATED);
-    }
-
     @PutMapping("/update/{userId}")
     public ResponseEntity<CustomerUserDTO> updateCustomerUser(@Valid @RequestBody CustomerUser customerUser,
                                                               @PathVariable("userId") Long userId) {

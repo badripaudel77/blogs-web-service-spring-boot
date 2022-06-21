@@ -1,7 +1,5 @@
 package com.amigos.spring.blog.utils;
 
-import org.springframework.data.domain.Sort;
-
 public class GlobalConstants {
     public static final String DEFAULT_PAGE_SIZE = "5";
     public static final String DEFAULT_STARTING_PAGE = "0";
@@ -11,4 +9,7 @@ public class GlobalConstants {
     public static final String DEFAULT_FEATURED_IMAGE_URL = "default_featured_image.jpeg";
     public static final String BLOG_FEATURED_IMAGE_UPLOAD_DIR = "uploads/blog_featured_images/";
     public static final String CUSTOMER_USER_PROFILE_IMAGE_UPLOAD_DIR = "uploads/profile_images/";
+
+    public static final String DEFAULT_USER_ROLE_NAME= "ROLE_USER";
+    public static final String ADMIN_ROLE_NAME= "ROLE_ADMIN";
 }
