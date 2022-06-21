@@ -6,6 +6,7 @@ import com.amigos.spring.blog.services.interfaces.BlogCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,18 +33,21 @@ public class BlogCategoryResource {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<BlogCategoryDTO> createBlogCategory(@Valid @RequestBody BlogCategory blogCategory) {
         BlogCategoryDTO blogCategoryDTO = blogCategoryService.createNewBlogCategory(blogCategory);
         return new ResponseEntity<>(blogCategoryDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{blogCategoryId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<BlogCategoryDTO> updateBlogCategory(@Valid @RequestBody BlogCategory blogCategory, @PathVariable("blogCategoryId") Long blogCategoryId) {
         BlogCategoryDTO blogCategoryDTO = blogCategoryService.updateBlogCategory(blogCategory, blogCategoryId);
         return new ResponseEntity<>(blogCategoryDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{blogCategoryId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     ResponseEntity delete(@PathVariable("blogCategoryId") Long blogCategoryId) {
         boolean isBlogCategoryDeleted = blogCategoryService.deleteBlogCategory(blogCategoryId);
         return new ResponseEntity(Map.of("isBlogCategoryDeleted", isBlogCategoryDeleted), HttpStatus.OK);
