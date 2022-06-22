@@ -12,6 +12,14 @@ public class GlobalConstants {
 
     public static final String DEFAULT_USER_ROLE_NAME= "ROLE_USER";
     public static final String ADMIN_ROLE_NAME= "ROLE_ADMIN";
+    public static final String SUPER_ADMIN_ROLE_NAME= "ROLE_SUPER_ADMIN";
+
+    public static final Long DEFAULT_USER_ROLE_ID = 500L;
+    public static final Long DEFAULT_AMDMIN_ROLE_ID = 501L;
+    public static final Long DEFAULT_SUPER_AMDMIN_ROLE_ID = 502L;
 
     public static final String REDIS_BLOGS_HASH="BLOGS_REDIS_CACHE";
+
+    public static final String CUSTOMER_USER_PROFILE_IMAGE_PREFIX = "app_customer_user_profile_image_";
+    public static final String BLOG_FEAUTRED_IMAGE = "app_blog_featured_image_";
 }

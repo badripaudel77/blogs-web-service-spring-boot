@@ -18,11 +18,16 @@ import java.util.List;
 public class Role {
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    // @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "role_name")
     private String roleName;
+
+    public Role(Long id, String roleName) {
+        this.roleName = roleName;
+        this.id = id;
+    }
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "roles")
     List<CustomerUser> customerUsers = new ArrayList<>();

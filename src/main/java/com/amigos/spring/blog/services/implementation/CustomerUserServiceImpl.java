@@ -6,6 +6,7 @@ import com.amigos.spring.blog.exceptions.ResourceNotFoundException;
 import com.amigos.spring.blog.models.CustomerUser;
 import com.amigos.spring.blog.models.Role;
 import com.amigos.spring.blog.repositories.CustomerUserRepository;
+import com.amigos.spring.blog.repositories.RoleRepository;
 import com.amigos.spring.blog.services.interfaces.CustomerUserService;
 import com.amigos.spring.blog.utils.CustomerUserDTOHelper;
 import com.amigos.spring.blog.utils.GlobalConstants;
@@ -37,6 +38,13 @@ public class CustomerUserServiceImpl implements CustomerUserService {
     @Autowired
     private CustomerUserRepository customerUserRepository;
 
+    private RoleRepository roleRepository;
+
+    @Autowired
+    public CustomerUserServiceImpl(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+    }
+
     @Override
     public List<CustomerUserDTO> getCustomerUsers() {
         List<CustomerUser> customerUsers = customerUserRepository.findAll();
@@ -61,11 +69,10 @@ public class CustomerUserServiceImpl implements CustomerUserService {
         if(user.getProfileImageURL() == null || user.getProfileImageURL().length() <3) {
             user.setProfileImageURL(GlobalConstants.DEFAULT_PROFILE_IMAGE_URL);
         }
-        Set<Role> roles = new HashSet<>();
-        Role role = new Role();
+        Role role = roleRepository.findById(GlobalConstants.DEFAULT_USER_ROLE_ID).get();
         role.setRoleName(GlobalConstants.DEFAULT_USER_ROLE_NAME);
-        roles.add(role);
-        user.setRoles(roles);
+        user.getRoles().add(role);
+        user.setEmail(user.getEmail().toLowerCase().trim());
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         CustomerUser customerUser = customerUserRepository.save(user);
         CustomerUserDTO customerUserDTO = CustomerUserDTOHelper.buildDTOFromCustomerUser(customerUser);
@@ -112,7 +119,7 @@ public class CustomerUserServiceImpl implements CustomerUserService {
         }
         try {
             File destinationFile = new File(GlobalConstants.CUSTOMER_USER_PROFILE_IMAGE_UPLOAD_DIR);
-            filename = "app_customer_user_profile_image_" + customerUser.get().getId() + "_" +
+            filename = GlobalConstants.CUSTOMER_USER_PROFILE_IMAGE_PREFIX + customerUser.get().getId() + "_" +
                     customerUser.get().getName().replace(" ","") +
                     "_" + file.getSize() + file.getName() + "_" + file.getOriginalFilename();
             Path path = Paths.get(destinationFile.getAbsolutePath() + File.separator + filename);

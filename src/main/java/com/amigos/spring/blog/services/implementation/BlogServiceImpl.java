@@ -215,7 +215,7 @@ public class BlogServiceImpl implements BlogService {
 
         try {
             File destinationFile = new File(GlobalConstants.BLOG_FEATURED_IMAGE_UPLOAD_DIR);
-            filename = "app_blog_featured_image_" + blog.get().getId() + "_" +
+            filename = GlobalConstants.BLOG_FEAUTRED_IMAGE + blog.get().getId() + "_" +
                     "_" + file.getSize() + "_" + file.getName() + "_" + file.getOriginalFilename() ;
             Path path = Paths.get(destinationFile.getAbsolutePath() + File.separator + filename);
             Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
