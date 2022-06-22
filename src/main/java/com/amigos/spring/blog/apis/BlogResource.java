@@ -6,6 +6,7 @@ import com.amigos.spring.blog.services.interfaces.BlogService;
 import com.amigos.spring.blog.utils.BlogsData;
 import com.amigos.spring.blog.utils.GlobalConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ public class BlogResource {
 
     //https://www.baeldung.com/spring-request-param
     @GetMapping("")
+    @Cacheable(value = GlobalConstants.REDIS_BLOGS_HASH)
     public BlogsData getAllBlogs(@RequestParam(name = "page", defaultValue = GlobalConstants.DEFAULT_STARTING_PAGE, required = false) Integer page,
                                  @RequestParam(name = "size", defaultValue = GlobalConstants.DEFAULT_PAGE_SIZE, required = false) Integer size,
                                  @RequestParam(name= "sort", defaultValue = GlobalConstants.DEFAULT_SORTING_FIELD) String sortField,
@@ -31,10 +33,12 @@ public class BlogResource {
                                      ) {
         return blogService.getAllBlogs(page, size, sortField, sortDirection);
     }
+
     @GetMapping("/search")
-    public ResponseEntity<List<BlogDTO>> searchBlogs(@RequestParam(name = "searchTerm", defaultValue = "", required = false) String searchTerm) {
+    @Cacheable(value = GlobalConstants.REDIS_BLOGS_HASH, key = "#searchTerm")
+    public List<BlogDTO> searchBlogs(@RequestParam(name = "searchTerm", defaultValue = "", required = false) String searchTerm) {
         List<BlogDTO> blogDTOList = blogService.searchBlogsBySearchTerm("%" + searchTerm + "%");
-        return new ResponseEntity<>(blogDTOList, HttpStatus.OK);
+        return blogDTOList;
     }
 
     @GetMapping("/{blogId}")

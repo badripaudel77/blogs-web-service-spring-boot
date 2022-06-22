@@ -2,7 +2,6 @@ package com.amigos.spring.blog.services.implementation;
 
 import com.amigos.spring.blog.dtos.BlogDTO;
 import com.amigos.spring.blog.exceptions.ResourceAlreadyExistsException;
-import com.amigos.spring.blog.utils.BlogsData;
 import com.amigos.spring.blog.exceptions.ResourceNotFoundException;
 import com.amigos.spring.blog.exceptions.UnauthorizedException;
 import com.amigos.spring.blog.models.Blog;
@@ -13,11 +12,11 @@ import com.amigos.spring.blog.repositories.BlogRepository;
 import com.amigos.spring.blog.repositories.CustomerUserRepository;
 import com.amigos.spring.blog.services.interfaces.BlogService;
 import com.amigos.spring.blog.utils.BlogDTOHelper;
+import com.amigos.spring.blog.utils.BlogsData;
 import com.amigos.spring.blog.utils.GlobalConstants;
 import com.amigos.spring.blog.utils.MyLogger;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -89,6 +88,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public BlogDTO getBlogById(Long blogId) {
+        logger.info("Retrieving all the blogs with Id : " + blogId);
         Optional<Blog> blog = blogRepository.findById(blogId);
         if(blog.isEmpty()) {
             throw new ResourceNotFoundException("Blog with Id " + blogId + " not found.", 404);
@@ -98,6 +98,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public BlogsData getAllBlogs(Integer page, Integer size, String sortField, String sortDirection) {
+        logger.info("Retrieving all the blogs at page & size : " + page + " " + size);
         //https://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-part-seven-pagination/
         if(size<=0) size = Integer.parseInt(GlobalConstants.DEFAULT_PAGE_SIZE);
         if(page<0) page= Integer.parseInt(GlobalConstants.DEFAULT_STARTING_PAGE);
@@ -126,6 +127,8 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public BlogDTO createBlog(Blog blog, Long customerUserId, Long blogCategoryId) {
+        logger.info("Creating blog " + blog.getBlogTitle());
+
         Optional<BlogCategory> blogCategory  = blogCategoryRepository.findById(blogCategoryId);
         if(!blogCategory.isPresent()) {
             throw new ResourceNotFoundException("The category " + blogCategoryId + " doesn't exist.", 404);
@@ -167,6 +170,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public Boolean deleteBlog(Long customerUserId, Long blogId) {
+        logger.info("Deleting the blog with Id : " + blogId);
         Optional<CustomerUser> customerUser  = customerUserRepository.findById(customerUserId);
         if(!customerUser.isPresent()) {
             throw new ResourceNotFoundException("This customer user " + customerUserId + " doesn't exist.", 404);
@@ -186,6 +190,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public List<BlogDTO> searchBlogsBySearchTerm(String searchTerm) {
+        System.out.println("Searching blogs with query : " + searchTerm);
         List<Blog> blogList = blogRepository.searchBlogsBySearchTerm("%" + searchTerm.toLowerCase() + "%");
         if(blogList.size() == 0) {
             logger.info("No results found for search term : " + searchTerm);

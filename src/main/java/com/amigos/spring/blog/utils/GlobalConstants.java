@@ -12,4 +12,6 @@ public class GlobalConstants {
 
     public static final String DEFAULT_USER_ROLE_NAME= "ROLE_USER";
     public static final String ADMIN_ROLE_NAME= "ROLE_ADMIN";
+
+    public static final String REDIS_BLOGS_HASH="BLOGS_REDIS_CACHE";
 }
