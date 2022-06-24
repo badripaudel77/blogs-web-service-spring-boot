@@ -10,6 +10,7 @@ Blog application using Spring Boot &amp; Java
 - Data JPA
 - Hibernate validator
 - PostgreSQL Driver
+- Redis with spring data redis
 - Spring Security & More...
 
 # Architecture followed
@@ -47,4 +48,12 @@ Blog application using Spring Boot &amp; Java
 # JWT authentication
 - REF : https://www.youtube.com/watch?v=X80nJ5T7YpE
 - Stateless authentication mechanism.
+
+## How to run this app ? 
+------------------------
+- Clone the repo [main branch]
+- Change credentials for postgres [or add other database if you wish]
+- Install redis
+- Import with IntelliJ or IDE of your choice.
+- And run
 
