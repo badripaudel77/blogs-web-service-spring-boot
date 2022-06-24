@@ -2,8 +2,6 @@
 Blog application using Spring Boot &amp; Java 
 ---------------------------------------------
 
-# TODO: please add redis with spring redis .... for learning purposes and observe the time efficiency for retrieving data.
-
 # Dependencies :
 - Spring web
 - Spring boot dev tools
