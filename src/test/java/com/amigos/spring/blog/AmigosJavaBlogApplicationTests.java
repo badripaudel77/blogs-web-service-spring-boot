@@ -2,9 +2,8 @@ package com.amigos.spring.blog;
 
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.assertj.core.api.AssertionsForClassTypes.*;
 
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class AmigosJavaBlogApplicationTests {
@@ -39,5 +38,19 @@ class AmigosJavaBlogApplicationTests {
       assertThat(number).isEqualTo(anotherNumber);
     }
 
+    /* Test home (/) endpoint
+     * Basically test status code,
+     * Response [payload (JSON)]
+     * headers etcetera
+     */
+    @Test
+    @DisplayName("Test Home End Point at appContext/")
+    void testHomeEndPoint() {
+        // given
+        String url = "/";
+        // expected payload
+        String expectedOutput = "amigos spring blog application.";
 
+        // assertThat(url).isEqualTo(expectedOutput); // TODO : to be done
+    }
 }
