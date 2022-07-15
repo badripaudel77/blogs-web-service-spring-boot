@@ -52,3 +52,5 @@ Blog application using Spring Boot &amp; Java
 - If we include spring boot testing , it by default includes assertJ, Junit etc.
 - REF : https://junit.org/junit5/docs/current/user-guide/ [JUnit 5]
 - REF : AssertJ library [provides very good methods for assertion ] https://assertj.github.io/doc/
+- To test with **different** database for eg : **H2 in memory database**, we can create resources folder inside the
+  test and create a separate application.properties file there and testing will use that folder.
