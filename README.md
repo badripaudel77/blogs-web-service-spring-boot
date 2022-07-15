@@ -48,3 +48,7 @@ Blog application using Spring Boot &amp; Java
 - REF : https://www.youtube.com/watch?v=X80nJ5T7YpE
 - Stateless authentication mechanism.
 
+# JUnit Testing
+- If we include spring boot testing , it by default includes assertJ, Junit etc.
+- REF : https://junit.org/junit5/docs/current/user-guide/ [JUnit 5]
+- REF : AssertJ library [provides very good methods for assertion ] https://assertj.github.io/doc/
